@@ -1,7 +1,7 @@
 #include <boost/variant.hpp>
 #include <iostream>
 
-#include "stuff/fsm.hpp"
+#include "fsm_v1/fsm.hpp"
 
 namespace vending_machine {
 struct ButtonPressed {
