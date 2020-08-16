@@ -14,6 +14,7 @@ struct Three {};
 using Numbers = boost::variant<One, Two, Three>;
 
 struct Visitor : public boost::static_visitor<bool> {
+  Visitor() = default;
   template <typename Letter, typename Number>
   bool operator()(const Letter&, const Number&) const {
     std::cout << "unspecified types\n";
