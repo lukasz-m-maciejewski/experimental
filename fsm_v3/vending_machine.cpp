@@ -16,7 +16,7 @@ using Event = boost::variant<ButtonPressed, CoinInserted, Reset>;
 
 class Idle {
  public:
-  Idle() { std::cout << "Idle state created\n"; }
+  Idle() : funds_{0} { std::cout << "Idle state created\n"; }
   Idle(int funds) : funds_{funds} {
     std::cout << "Idle state created with funds:" << funds << '\n';
   }
@@ -39,6 +39,8 @@ class Idle {
   int funds_;
 };
 
+class VendingMachine;
+
 struct Error {
   Error() { std::cout << "Error state created\n"; }
   Error(const Error&) { std::cout << "Error state copied\n"; }
@@ -46,6 +48,8 @@ struct Error {
   Error(Error&&) { std::cout << "Error state moved\n"; }
   void operator=(Error&&) { std::cout << "Error state move assigned\n"; }
   ~Error() { std::cout << "Error state destroyed\n"; }
+
+  void OnEntry(VendingMachine& m);
 };
 
 struct FetchingItem {};
@@ -56,7 +60,8 @@ class VendingMachine
  public:
   VendingMachine() {}
 
-  state_machine::Transition<State> HandleEvent(Idle& state, const ButtonPressed& event) {
+  state_machine::Transition<State> HandleEvent(Idle& state,
+                                               const ButtonPressed& event) {
     std::cout << "handling ButtonPressed in Idle state\n";
     std::cout << "choice:" << event.choice << '\n';
     if (state.funds_ >= 20) {
@@ -68,16 +73,19 @@ class VendingMachine
     }
   }
 
-  state_machine::Transition<State> HandleEvent(FetchingItem&, const ButtonPressed&) {
+  state_machine::Transition<State> HandleEvent(FetchingItem&,
+                                               const ButtonPressed&) {
     std::cout << "Handling Button pressed in FetchinItem";
     return state_machine::NoTransition();
   }
 
-  state_machine::Transition<State> HandleEvent(Idle& state, const CoinInserted& event) {
+  state_machine::Transition<State> HandleEvent(Idle& state,
+                                               const CoinInserted& event) {
     std::cout << "Handling CoinInserted in Idle\n";
     state.funds_ += event.value;
     return state_machine::NoTransition();
-    // return state_machine::MakeTransition<State>(Idle{state.funds_ + event.value});
+    // return state_machine::MakeTransition<State>(Idle{state.funds_ +
+    // event.value});
   }
 
   template <typename S>
@@ -92,16 +100,28 @@ class VendingMachine
     return state_machine::NoTransition();
   }
 
+  int val = 10;
+
  private:
   void giveChange(int value) {
     std::cout << "returing " << value << " money\n";
   }
 };
+
+void Error::OnEntry(VendingMachine& m) {
+  std::cout << m.val << "ERROR ENTRY ERROR ERROR!\n";
 }
+}  // namespace vending_machine
 
 int main() {
+  // auto has_OnEntry =
+  //     boost::hana::is_valid([](auto&& x) -> decltype(x.OnEntry()) {});
+  // auto error = vending_machine::Error();
+  // static_assert(has_OnEntry(error), "");
+  // auto idle = vending_machine::Idle();
+  // static_assert(!has_OnEntry(idle), "");
   vending_machine::VendingMachine m;
-  m.Dispatch(vending_machine::CoinInserted{20});
+  // m.Dispatch(vending_machine::CoinInserted{20});
   std::cout << "Phase 2\n";
   m.Dispatch(vending_machine::ButtonPressed{10});
   m.Dispatch(vending_machine::CoinInserted{25});
