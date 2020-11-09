@@ -1,8 +1,6 @@
 #include <iostream>
 
-namespace my{
+namespace my {
 extern int const x;
 }
-int main() {
-  std::cout << my::x << '\n';
-}
+int main() { std::cout << my::x << '\n'; }

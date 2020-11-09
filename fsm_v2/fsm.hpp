@@ -1,16 +1,14 @@
 #pragma once
 
-#include <utility>
-#include <boost/variant.hpp>
 #include <boost/optional.hpp>
+#include <boost/variant.hpp>
+#include <utility>
 
 namespace state_machine {
 template <typename State>
 using Transition = boost::optional<State>;
 
-auto NoTransition() {
-  return boost::none;
-}
+auto NoTransition() { return boost::none; }
 
 template <typename State, typename Target>
 Transition<State> MakeTransition(Target&& t) {
@@ -44,4 +42,4 @@ class FSMBase {
  protected:
   State fsmState_;
 };
-}
+}  // namespace state_machine

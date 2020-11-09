@@ -1,7 +1,7 @@
 #pragma once
 
-#include <utility>
 #include <boost/variant.hpp>
+#include <utility>
 
 namespace state_machine {
 template <typename FSM, typename State>
@@ -29,4 +29,4 @@ class FSMBase {
  protected:
   State fsmState_;
 };
-}
+}  // namespace state_machine

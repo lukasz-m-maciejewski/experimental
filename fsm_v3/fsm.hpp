@@ -58,9 +58,10 @@ class FSMBase {
   static void MaybeCallOnEntry(T& state, FSM& fsm) {
     auto has_OnEntry = boost::hana::is_valid(
         [](auto&& s, auto&& m) -> decltype(s.OnEntry(m)) {});
-    boost::hana::if_(has_OnEntry(state, fsm),
-                     [](auto&& withOnEntry, FSM& m) { withOnEntry.OnEntry(m); },
-                     [](auto&&, FSM&) {})(state, fsm);
+    boost::hana::if_(
+        has_OnEntry(state, fsm),
+        [](auto&& withOnEntry, FSM& m) { withOnEntry.OnEntry(m); },
+        [](auto&&, FSM&) {})(state, fsm);
   }
 };
-}
+}  // namespace state_machine

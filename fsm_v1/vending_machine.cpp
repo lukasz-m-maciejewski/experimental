@@ -94,7 +94,7 @@ class VendingMachine
     std::cout << "returing " << value << " money\n";
   }
 };
-}
+}  // namespace vending_machine
 
 int main() {
   vending_machine::VendingMachine m;

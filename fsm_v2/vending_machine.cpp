@@ -56,7 +56,8 @@ class VendingMachine
  public:
   VendingMachine() {}
 
-  state_machine::Transition<State> HandleEvent(Idle& state, const ButtonPressed& event) {
+  state_machine::Transition<State> HandleEvent(Idle& state,
+                                               const ButtonPressed& event) {
     std::cout << "handling ButtonPressed in Idle state\n";
     std::cout << "choice:" << event.choice << '\n';
     if (state.funds_ >= 20) {
@@ -68,16 +69,19 @@ class VendingMachine
     }
   }
 
-  state_machine::Transition<State> HandleEvent(FetchingItem&, const ButtonPressed&) {
+  state_machine::Transition<State> HandleEvent(FetchingItem&,
+                                               const ButtonPressed&) {
     std::cout << "Handling Button pressed in FetchinItem";
     return state_machine::NoTransition();
   }
 
-  state_machine::Transition<State> HandleEvent(Idle& state, const CoinInserted& event) {
+  state_machine::Transition<State> HandleEvent(Idle& state,
+                                               const CoinInserted& event) {
     std::cout << "Handling CoinInserted in Idle\n";
     state.funds_ += event.value;
     return state_machine::NoTransition();
-    // return state_machine::MakeTransition<State>(Idle{state.funds_ + event.value});
+    // return state_machine::MakeTransition<State>(Idle{state.funds_ +
+    // event.value});
   }
 
   template <typename S>
@@ -97,7 +101,7 @@ class VendingMachine
     std::cout << "returing " << value << " money\n";
   }
 };
-}
+}  // namespace vending_machine
 
 int main() {
   vending_machine::VendingMachine m;
