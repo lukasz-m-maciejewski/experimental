@@ -3,3 +3,5 @@
 /bazel-out
 /bazel-testlogs
 /bazel-experimental
+*.o
+*.exe
